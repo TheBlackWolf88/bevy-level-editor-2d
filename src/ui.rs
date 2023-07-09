@@ -5,15 +5,20 @@ use crate::{Tilemap, GameState};
 pub struct UiPlugin;
 
 impl Plugin for UiPlugin {
-    fn build(&self, app: &mut App, game_state: Res<State<GameState>>) {
-        if GameState::Running {
-            app.add_startup_system(setup);
+    fn build(&self, app: &mut App) {
+        app
+            .add_startup_system(test.in_schedule(OnEnter(GameState::Running)));
         }
-            .
     }
+
+
+
+fn test(){
+    println!("This is a test startup system");
 }
 
-fn setup(mut commands: Commands, textures: Res<Tilemap>){
+
+fn setup(mut commands: Commands){
     commands.spawn(NodeBundle{
         style: Style {
             size: Size::width(Val::Percent(100.0)),
@@ -32,7 +37,7 @@ fn setup(mut commands: Commands, textures: Res<Tilemap>){
                     overflow: Overflow::Hidden,
                     ..default()
                 },
-                background_color: Color::rgb(0.55, 0.10, 0.25).into(),
+                background_color: Color::rgb(0.15, 0.15, 0.17).into(),
                 ..default()
             }    
         );

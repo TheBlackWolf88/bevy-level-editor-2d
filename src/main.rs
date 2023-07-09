@@ -20,7 +20,7 @@ fn main(){
     let mut app = App::new();
 
     app
-        .add_state(GameState::Loading)
+        .add_state::<GameState>()
         .add_plugins(DefaultPlugins)
         .add_plugin(WorldInspectorPlugin::new())
         .add_startup_system(load_tilemap)
@@ -58,10 +58,12 @@ fn move_cam(mut cam_query: Query<&mut Transform, With<MainCamera>>, keyboard: Re
         
 }
 
-fn load_tilemap(mut commands: Commands, assets: Res<AssetServer>, mut texture_atlases: ResMut<Assets<TextureAtlas>>){
+fn load_tilemap(mut commands: Commands, assets: Res<AssetServer>, mut texture_atlases: ResMut<Assets<TextureAtlas>>, mut app_state_next: ResMut<NextState<GameState>>){
     let image = assets.load("tilemap_packed.png");
     let atlas = TextureAtlas::from_grid(image, Vec2::splat(32.0), 16, 16, None, None );
     let atlas_handle = texture_atlases.add(atlas);
 
     commands.insert_resource(Tilemap(atlas_handle));
+    app_state_next.set(GameState::Running);
+    
 }
